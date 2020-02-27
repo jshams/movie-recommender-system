@@ -26,4 +26,20 @@ class User:
         return self.movie_ratings[movie_id]
 
     def similarity(self, other_user, euclidian=False):
-        pass
+        '''calculates the similarity between two users. returns a float
+        from 0-1 indicating similarity. 1 being identical.
+        Uses euclidian distance metric'''
+        if not euclidian:
+            return self.cosine_similarity(other_user)
+        sum_squares = 0
+        for movie, rating in self.movie_ratings.items():
+            if movie in other_user.movie_ratings:
+                other_rating = other_user.get_movie_rating(movie)
+                squared_diff = (rating - other_rating) ** 2
+                sum_squares += squared_diff
+            else:
+                sum_squares += rating ** 2
+        for movie, rating in other_user.movie_ratings.items():
+            if movie not in self.movie_ratings:
+                sum_squares += rating ** 2
+        return 1 / (sqrt(sum_squares) + 1)
