@@ -1,4 +1,5 @@
 from user import User
+from heapq import heappop, heappush
 
 
 class Users:
@@ -34,4 +35,18 @@ class Users:
         return user.get_movie_rating(movie_id)
 
     def k_nearest_neighbors(self, new_user, k=10):
-        pass
+        '''finds the k nearest neighbors using linear search
+        returns a dict of (user obj : similarity score)'''
+        k_best_neighbors = []
+        for user in self.users.values():
+            if new_user._id == user._id:
+                continue
+            similarity = user.similarity(new_user)
+            sim_and_user = (similarity, user)
+            if len(k_best_neighbors) < k:
+                heappush(k_best_neighbors, sim_and_user)
+            else:
+                if sim_and_user > k_best_neighbors[0]:
+                    heappop(k_best_neighbors)
+                    heappush(k_best_neighbors, sim_and_user)
+        return dict([reversed(item) for item in k_best_neighbors])
