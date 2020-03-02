@@ -75,3 +75,44 @@ class Recommender:
             next_best_movie_id = heappop(best_recs)[1]  # [1]
             results.append(self.movies.get_title(next_best_movie_id))
         return results[::-1]
+
+    def smart_reccomend(self, new_user, n=10):
+        '''Reccomends movies using user-user collaborative filtering'''
+        best_recs = []
+        count = 0
+        for movie_id in self.movies.movies:
+            count += 1
+            if count % 1000 == 0:
+                print(str(count // 100) + '%')
+            score = self.predict_score(new_user, movie_id)
+            score_and_movie = (score, movie_id)
+            if len(best_recs) < n:
+                heappush(best_recs, score_and_movie)
+            else:
+                # if the curr score > min item in minheap (worst best score)
+                if score_and_movie > best_recs[0]:
+                    # remove the min item and add the new item
+                    heappop(best_recs)
+                    heappush(best_recs, score_and_movie)
+        # return the movies order of best to worst
+        results = []
+        for _ in range(n):
+            next_best_movie_id = heappop(best_recs)[1]
+            results.append(self.movies.get_title(next_best_movie_id))
+        return results[::-1]
+
+    def predict_score(self, new_user, movie):
+        if type(movie) is str:
+            movie = self.movies.get_id(movie)
+        '''predict the rating a user would give for a movie they havent seen
+        if no neighbor has that movie, find more neighbors until one does'''
+        total_rvi_suv = 0
+        total_suv = 0
+        for other_user in self.users.users.values():
+            rvi = 0
+            if movie in other_user.movie_ratings:
+                rvi = other_user.get_movie_rating(movie)
+            suv = new_user.similarity(other_user)
+            total_rvi_suv += rvi * suv
+            total_suv += suv
+        return total_rvi_suv / total_suv
