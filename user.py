@@ -56,3 +56,31 @@ class User:
             if movie not in self.movie_ratings:
                 sum_squares += rating ** 2
         return 1 / (sqrt(sum_squares) + 1)
+
+    def cosine_similarity(self, other_user):
+        '''caluclates the cosine similarity between two users.
+        The formula for cosine similarities between two users a and b is:
+        cos(a, b) = (a•b)/(||a||*||b||)
+        that is the dot product of a and b, divided by the magnitude of a
+        multiplied by the magnitude of b
+        '''
+        dot_product = self.dot_product(other_user)
+        self_mag = self.magnitude()
+        other_mag = other_user.magnitude()
+        return dot_product / (self_mag * other_mag)
+
+    def magnitude(self):
+        '''calculates and returns the magnitude of itself
+        ||a|| = (∑ai**2)**0.5'''
+        return sqrt(sum(rating**2 for rating in self.movie_ratings.values()))
+
+    def dot_product(self, other_user):
+        '''calculates and returns the dot product between self and other user
+        (a•b) = ∑ai*bi'''
+        dot_prod = 0
+        for movie, rating in self.movie_ratings.items():
+            if movie in other_user.movie_ratings:
+                other_rating = other_user.get_movie_rating(movie)
+                prod = rating * other_rating
+                dot_prod += prod
+        return dot_prod
