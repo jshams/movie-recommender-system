@@ -28,13 +28,14 @@ This approach is an extremely naive approach to RS with movies.
 1. Find 10 most similar users to a given user
     - Uses [Euclidian Distance](https://en.wikipedia.org/wiki/Euclidean_distance) to calculate the
     distance between users. Works quickly because you only have to compare movies both users have seen.
+    <img src="https://cdn.analyticsvidhya.com/wp-content/uploads/2018/05/2zjgw1x1.png"></img>
     - The 10 most similar users are the ones with the shortest distance from the original user.
 2. Collect all the movies other users have watched
 3. For each movie predict the score the original user would rate it. To predict the score of a movie:
     - Find all similar users that have rated the movie.
     - Users that are more similar to the original user will weigh stronger (their reccomendations will count more).
     - Note: This method is flawed because if only one user rates a movie a 5, then that movie will get recommended. This can be fixed by adding more metrics.
-4. Return a list of the 5 most highly rated movies by similar users.
+4. Return a list of the 10 most highly rated movies by similar users.
 
 **Does it work?** Yes  
 **Is it as accurate as I'd like it to be?** No  
@@ -43,3 +44,25 @@ This approach is an extremely naive approach to RS with movies.
 ---
 
 ## Approach 2:
+This method is similar to the first, but uses more traditional metrics and methodologies.
+Instead of finding similar users this method predics the score a user would give for each movie.
+Then takes the best predicted ratings and returns those.
+
+#### Step By Step Explanation
+1. Predict the score the user would rate each movie
+    - A movie score is calculated using this formula:  
+    <img style="margin-left: 30%; height: 60px;" src="https://cdn.analyticsvidhya.com/wp-content/uploads/2018/05/Screenshot-from-2018-05-29-20-15-31.png"></img>
+    - Here:
+        - Pu,i is the prediction of an item
+        - Rv,i is the rating given by a user v to a movie i
+        - Su,v is the similarity between users
+    - Uses [cosine similarity](https://en.wikipedia.org/wiki/Cosine_similarity) as a metric to determine similarity between users.
+    <img style="margin-left: 30%; height: 60px;" src="https://cdn.analyticsvidhya.com/wp-content/uploads/2018/05/Screenshot-from-2018-05-31-14-28-18-300x80.png">
+2. Return the 10 best predicted movie scores.
+
+This method was inspired from this article.
+[Comprehensive Guide to build a Recommendation Engine from scratch (in Python)](https://www.analyticsvidhya.com/blog/2018/06/comprehensive-guide-recommendation-engine-python/)
+
+**Does it work?** Yes  
+**Is it as accurate as I'd like it to be?** It does a pretty good job.  
+**Flaws:** Extremely slow. For each movie we have to look at each user.
