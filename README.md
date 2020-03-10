@@ -27,7 +27,7 @@ This approach is an extremely naive approach to RS with movies.
 #### Step By Step Explanation
 1. Find 10 most similar users to a given user
     - Uses [Euclidian Distance](https://en.wikipedia.org/wiki/Euclidean_distance) to calculate the
-    distance between users. Works quickly because you only have to compare movies both users have seen.
+    distance between users. Works quickly because you only have to compare movies both users have seen.  
     <img src="https://cdn.analyticsvidhya.com/wp-content/uploads/2018/05/2zjgw1x1.png"></img>
     - The 10 most similar users are the ones with the shortest distance from the original user.
 2. Collect all the movies other users have watched
