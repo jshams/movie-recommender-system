@@ -76,7 +76,7 @@ class Recommender:
             results.append(self.movies.get_title(next_best_movie_id))
         return results[::-1]
 
-    def smart_reccomend(self, new_user, n=10):
+    def recommend_cosine_similarity_matrix(self, new_user, n=10):
         '''Reccomends movies using user-user collaborative filtering'''
         best_recs = []
         count = 0
@@ -94,6 +94,7 @@ class Recommender:
                     # remove the min item and add the new item
                     heappop(best_recs)
                     heappush(best_recs, score_and_movie)
+        print('100%')
         # return the movies order of best to worst
         results = []
         for _ in range(n):
@@ -102,10 +103,10 @@ class Recommender:
         return results[::-1]
 
     def predict_score(self, new_user, movie):
-        if type(movie) is str:
-            movie = self.movies.get_id(movie)
         '''predict the rating a user would give for a movie they havent seen
         if no neighbor has that movie, find more neighbors until one does'''
+        if type(movie) is str:
+            movie = self.movies.get_id(movie)
         total_rvi_suv = 0
         total_suv = 0
         for other_user in self.users.users.values():
