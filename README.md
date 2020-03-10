@@ -37,9 +37,12 @@ This approach is an extremely naive approach to RS with movies.
     - Note: This method is flawed because if only one user rates a movie a 5, then that movie will get recommended. This can be fixed by adding more metrics.
 4. Return a list of the 10 most highly rated movies by similar users.
 
+This method was inspired by The Coding Train's 3 part series [Nearest Neighbor Recommendation Engine](https://www.youtube.com/watch?v=N8Fabn1om2k&t=1343s)
+
 **Does it work?** Yes  
 **Is it as accurate as I'd like it to be?** No  
 **Flaws:** Does not care about movies being similar, instead only focuses on users. Does not utilize all the data given.
+
 
 ---
 
